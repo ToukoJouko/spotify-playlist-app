@@ -1,9 +1,10 @@
 import React from "react";
+import loginUrl from "../../backend/spotifyConfig";
 
 const Login = () => {
   return (
     <div>
-      <button type="submit">login with spotify</button>
+      <a href={loginUrl}>login with spotify</a>
     </div>
   );
 };
