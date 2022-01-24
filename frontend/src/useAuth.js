@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-//this hook receives accestoken form server
+//this hook receives accestoken from server
 const useAuth = (code) => {
-  //stor accesstoken in useState
+  //store accesstoken in useState
   const [accessToken, setAccessToken] = useState();
 
   useEffect(() => {
@@ -11,7 +11,7 @@ const useAuth = (code) => {
       const response = await axios.post("http://localhost:3001/login", {
         code,
       });
-      console.log(response);
+      //console.log(response);
       if (response) {
         window.history.pushState({}, null, "/");
         setAccessToken(response.data.accessToken);

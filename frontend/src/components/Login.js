@@ -18,7 +18,8 @@ const scopes = [
 const scopesString = scopes.join("%20");
 
 //user gets authorization through this Url
-const loginUrl = `${authEndpoint}?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}&scope=${scopesString}`;
+//show_dialog=true, permission to use the app is asked every time every when the user tries to login
+const loginUrl = `${authEndpoint}?client_id=${clientId}&response_type=code&show_dialog=true&redirect_uri=${redirectUri}&scope=${scopesString}`;
 
 const Login = () => {
   return (

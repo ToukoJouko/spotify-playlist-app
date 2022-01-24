@@ -1,4 +1,3 @@
-import React from "react";
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
 
@@ -7,7 +6,7 @@ import Dashboard from "./components/Dashboard";
 //window.location.search === ?code=codeishere, and .get("code") gets the value from codeishere
 const code = new URLSearchParams(window.location.search).get("code");
 
-//if code is found, redirect ot dashboard with code on the screen, else go to login page
+//if code is found, redirect to dashboard with code on the screen, else go to login page
 const App = () => {
   return (
     <div className="app">{code ? <Dashboard code={code} /> : <Login />}</div>
