@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "grommet";
 import Playlist from "./Playlist";
+import MainHeader from "./MainHeader";
 import useAuth from "../useAuth";
 import SpotifyWebApi from "spotify-web-api-node";
 
@@ -12,6 +13,7 @@ const Dashboard = ({ code }) => {
   const accessToken = useAuth(code);
   const [userData, setUserData] = useState([]);
   const [playlists, setPlaylists] = useState([]);
+  const [topTracks, setTopTracks] = useState([]);
   const [showPlaylist, setShowPlaylist] = useState(false);
 
   /*
@@ -56,6 +58,14 @@ const Dashboard = ({ code }) => {
     setShowPlaylist(true);
   }, [userData.display_name]);
 */
+
+  const getTopTracks = async () => {
+    spotifyApi.setAccessToken(accessToken);
+    const topTracksResponse = await spotifyApi.getMyTopTracks({ limit: 50 });
+    setTopTracks(topTracksResponse.body.items);
+    console.log(topTracks);
+  };
+
   const logOut = (event) => {
     event.preventDefault();
     window.location = "/";
@@ -65,9 +75,11 @@ const Dashboard = ({ code }) => {
 
   return (
     <div>
-      <p>logged in as {userData.display_name}</p>
-
-      <Button label="logout" onClick={logOut}></Button>
+      <MainHeader
+        username={userData.display_name}
+        logOut={logOut}
+        playlistFunction1={getTopTracks}
+      />
       {showPlaylist ? (
         <ul>
           {playlists.items.map((playlist, index) => (
