@@ -43,6 +43,7 @@ const Dashboard = ({ code }) => {
       setShowPlaylist(true);
     };
 
+    getTopTracks(50, "short_term");
     getUserData();
   }, [accessToken]);
 
@@ -58,12 +59,43 @@ const Dashboard = ({ code }) => {
     setShowPlaylist(true);
   }, [userData.display_name]);
 */
+  const getTopTracks = async (limit, time_range) => {
+    const topTracksResponse = await spotifyApi.getMyTopTracks({
+      limit: limit,
+      time_range: time_range,
+    });
+    //get track id's
+    setTopTracks(topTracksResponse.body.items.map((track) => track.uri));
+  };
 
-  const getTopTracks = async () => {
+  const createTopTracksPlaylist = async (event) => {
+    event.preventDefault();
     spotifyApi.setAccessToken(accessToken);
-    const topTracksResponse = await spotifyApi.getMyTopTracks({ limit: 50 });
-    setTopTracks(topTracksResponse.body.items);
+    //get top tracks
+    const limit = 50;
+    const time_range = "short_term";
+    const topTracksResponse = await spotifyApi.getMyTopTracks({
+      limit: limit,
+      time_range: time_range,
+    });
+    //get track id's
+    setTopTracks(topTracksResponse.body.items.map((track) => track.uri));
     console.log(topTracks);
+
+    //create new playlist
+    await spotifyApi.createPlaylist(`Top ${limit} songs`, {
+      description: `Top ${limit} songs`,
+      public: true,
+    });
+
+    //get playlists
+    const responsePlaylists = await spotifyApi.getUserPlaylists(
+      userData.display_name
+    );
+    //add tracks to target playlist
+    const targetPlaylist = responsePlaylists.body.items[0].id;
+    await spotifyApi.addTracksToPlaylist(targetPlaylist, topTracks);
+    setShowPlaylist(responsePlaylists.body.items);
   };
 
   const logOut = (event) => {
@@ -78,7 +110,7 @@ const Dashboard = ({ code }) => {
       <MainHeader
         username={userData.display_name}
         logOut={logOut}
-        playlistFunction1={getTopTracks}
+        playlistFunction1={createTopTracksPlaylist}
       />
       {showPlaylist ? (
         <ul>

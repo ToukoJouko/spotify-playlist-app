@@ -4,7 +4,7 @@ import { Button, Box, Header } from "grommet";
 const MainHeader = (props) => {
   return (
     <Box direction="column">
-      <Box direction="row" justify="center" border="true">
+      <Box direction="column" justify="center" border="true">
         <h1>logged in as {props.username}</h1>
         <Button
           label="logout"
@@ -12,6 +12,12 @@ const MainHeader = (props) => {
           alignSelf="center"
           color="status-ok"
           onClick={props.logOut}
+        ></Button>
+        <Button
+          label="Open spotify"
+          alignSelf="center"
+          color="status-ok"
+          onClick={props.openSpotify}
         ></Button>
       </Box>
       <Box direction="column" border="true">
