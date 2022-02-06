@@ -6,7 +6,12 @@ const Notification = (props) => {
     <Layer onEsc={props.setShow} onClickOutside={props.setShow}>
       <Box pad="medium">
         <Text>{props.message}</Text>
-        <Button label="close" onClick={props.setShow}></Button>
+        <Button
+          primary
+          label="close"
+          pad="small"
+          onClick={props.setShow}
+        ></Button>
       </Box>
     </Layer>
   );

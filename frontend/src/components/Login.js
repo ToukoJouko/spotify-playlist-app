@@ -1,4 +1,6 @@
 import React from "react";
+import { Github, Spotify } from "grommet-icons";
+import { Box, Heading, Button, Footer, Anchor } from "grommet";
 
 //Auth rquests through this Url
 const authEndpoint = "https://accounts.spotify.com/authorize";
@@ -21,10 +23,34 @@ const scopesString = scopes.join("%20");
 //show_dialog=true, permission to use the app is asked every time every when the user tries to login
 const loginUrl = `${authEndpoint}?client_id=${clientId}&response_type=code&show_dialog=true&redirect_uri=${redirectUri}&scope=${scopesString}`;
 
+const pad = { horizontal: "small", top: "25vh" };
+
 const Login = () => {
   return (
     <div>
-      <a href={loginUrl}>login with spotify</a>
+      <Box justify="center" align="center" pad={pad}>
+        <Box direction="row" align="center" justify="center" gap="small">
+          <Spotify color="dark-1" size="large" />
+          <Heading color="dark-1" size="medium">
+            Top songs playlist generator
+          </Heading>
+        </Box>
+        <Button primary href={loginUrl} label="Login with spotify"></Button>
+      </Box>
+      <Footer
+        className="footer"
+        background="status-ok"
+        width="100%"
+        height="60px"
+        justify="center"
+      >
+        <Anchor
+          className="ghIcon"
+          color="dark-1"
+          icon={<Github size="30px" />}
+          href="https://github.com/ToukoJouko/spotify-playlist-app"
+        />
+      </Footer>
     </div>
   );
 };

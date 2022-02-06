@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Box } from "grommet";
-import Playlist from "./Playlist";
-import MainHeader from "./MainHeader";
+import Main from "./Main";
 import Notification from "./Notification";
 import useAuth from "../useAuth";
 import SpotifyWebApi from "spotify-web-api-node";
+import "./componentStyles.css";
 
 const spotifyApi = new SpotifyWebApi({
   clientId: "67c66cd2a61748088c5f1ac7cc9e76f4",
@@ -13,23 +12,20 @@ const spotifyApi = new SpotifyWebApi({
 const Dashboard = ({ code }) => {
   const accessToken = useAuth(code);
   const [userData, setUserData] = useState([]);
-  const [playlists, setPlaylists] = useState([]);
   const [topTracks, setTopTracks] = useState([]);
-  const [showPlaylist, setShowPlaylist] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const selectedValuesRef = useRef();
 
   const date = new Date();
   const today =
-    date.getDate() + "." + date.getMonth() + "." + date.getFullYear();
-  /*
+    date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear();
+
   useEffect(() => {
     const loggedUserToken = window.localStorage.getItem("loggedUserToken");
     if (loggedUserToken) {
-      spotifyApi.setAccessToken(accessToken);
+      spotifyApi.setAccessToken(loggedUserToken);
     }
   }, []);
-  */
 
   useEffect(() => {
     if (!accessToken) return;
@@ -41,12 +37,6 @@ const Dashboard = ({ code }) => {
       console.log(response);
       setUserData(response.body);
       window.localStorage.setItem("loggedUserToken", accessToken);
-      const responsePlaylists = await spotifyApi.getUserPlaylists(
-        userData.display_name
-      );
-      setPlaylists(responsePlaylists.body);
-      console.log(responsePlaylists.body);
-      setShowPlaylist(true);
     };
 
     getTopTracks(
@@ -56,18 +46,6 @@ const Dashboard = ({ code }) => {
     getUserData();
   }, [accessToken]);
 
-  /*
-  useEffect(() => {
-    const getPlaylists = async () => {
-      const response = await spotifyApi.getUserPlaylists(userData.display_name);
-      setPlaylists(response.body);
-      console.log(response.body);
-    };
-
-    getPlaylists();
-    setShowPlaylist(true);
-  }, [userData.display_name]);
-*/
   const getTopTracks = async (limit, time_range) => {
     try {
       const topTracksResponse = await spotifyApi.getMyTopTracks({
@@ -131,21 +109,19 @@ const Dashboard = ({ code }) => {
 
   return (
     <div>
-      <MainHeader
+      {showNotification && (
+        <Notification
+          message={"Playlist was created succesfully!"}
+          setShow={() => setShowNotification(false)}
+        />
+      )}
+      <Main
         username={userData.display_name}
         logOut={logOut}
         spotifyLink={`https://open.spotify.com/user/${userData.display_name}`}
         playlistFunction1={createTopTracksPlaylist}
         ref={selectedValuesRef}
       />
-      <Box>
-        {showNotification && (
-          <Notification
-            message={"Playlist was created succesfully!"}
-            setShow={() => setShowNotification(false)}
-          />
-        )}
-      </Box>
     </div>
   );
 };

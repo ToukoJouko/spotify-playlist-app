@@ -23,14 +23,18 @@ app.get("/", (request, response) => {
 
 //request code value and send accesstoken in response
 app.post("/login", async (request, response) => {
-  const code = request.body.code;
+  try {
+    const code = request.body.code;
 
-  const accessToken = await spotifyApi.authorizationCodeGrant(code);
-  if (accessToken) {
-    console.log(accessToken);
-    response.json({ accessToken: accessToken.body.access_token });
-  } else {
-    response.sendStatus(400);
+    const accessToken = await spotifyApi.authorizationCodeGrant(code);
+    if (accessToken) {
+      console.log(accessToken);
+      response.json({ accessToken: accessToken.body.access_token });
+    } else {
+      response.sendStatus(400);
+    }
+  } catch (error) {
+    console.log(error.message);
   }
 });
 
